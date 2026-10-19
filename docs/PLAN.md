@@ -3,8 +3,10 @@ PLAN: "feat: money v0.1.0 — Money in integer minor units, shares by basis poin
 TAG: v0.1.0
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
+STATUS: review
 SESSION: 17970899689038782990
+PR: https://github.com/webtyp/money/pull/1
+REVIEWED_COMMIT: 73cecc384735890214476aba347e367d918d677b
 ---
 
 > Read AGENTS.md at the repo root before any change.
