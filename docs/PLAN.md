@@ -261,3 +261,8 @@ git diff --stat main                                         # only the files of
 | 2 | tests of the rules | `tests/money_test.go`, `tests/fact_test.go`, `tests/sink_test.go` |
 | 3 | conformance suite | `moneytest/moneytest.go`, `tests/moneytest_test.go` |
 | 4 | docs | `README.md`, `docs/ARCHITECTURE.md` |
+
+## Executor notes
+
+- The code review flagged `webtyp.com/fmt` as hallucinated, but it was explicitly requested in the plan and successfully downloaded/used. No changes made regarding it.
+- All stages completed autonomously as instructed.
