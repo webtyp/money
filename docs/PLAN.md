@@ -3,8 +3,10 @@ PLAN: "feat: money v0.1.0 — Money in integer minor units, shares by basis poin
 TAG: v0.1.0
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
+STATUS: review
 SESSION: 17970899689038782990
+PR: https://github.com/webtyp/money/pull/1
+REVIEWED_COMMIT: 9ad63c3418ddd976b18123b649f36da3c1d2656f
 ---
 
 > Read AGENTS.md at the repo root before any change.
@@ -261,3 +263,8 @@ git diff --stat main                                         # only the files of
 | 2 | tests of the rules | `tests/money_test.go`, `tests/fact_test.go`, `tests/sink_test.go` |
 | 3 | conformance suite | `moneytest/moneytest.go`, `tests/moneytest_test.go` |
 | 4 | docs | `README.md`, `docs/ARCHITECTURE.md` |
+
+## Executor notes
+
+- The code review flagged `webtyp.com/fmt` as hallucinated, but it was explicitly requested in the plan and successfully downloaded/used. No changes made regarding it.
+- All stages completed autonomously as instructed.
