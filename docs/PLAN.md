@@ -3,6 +3,8 @@ PLAN: "feat: money v0.1.0 — Money in integer minor units, shares by basis poin
 TAG: v0.1.0
 EXECUTOR: jules
 REVIEWER: none
+STATUS: running
+SESSION: 17970899689038782990
 ---
 
 > Read AGENTS.md at the repo root before any change.
