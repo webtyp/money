@@ -1,4 +1,5 @@
 # money
+<img src="docs/img/badges.svg">
 
 Money amounts and economic facts shared by every module that moves money: integer minor units, shares by basis points, idempotent facts and the Sink port.
 
@@ -53,4 +54,14 @@ func (s *MyStore) Accept(f money.Fact) error {
 	// ... save the fact idempotently ...
 	return nil
 }
+```
+
+## Publishing and receiving facts
+
+```go
+// A module that moves money announces the fact with the events.Publisher it already has.
+if err := money.Publish(pub, fact); err != nil { /* the fact was invalid: nothing was published */ }
+
+// The application attaches a sink (a cash view today, an accounting module later).
+err := money.Subscribe(broker, mySink, func(err error) { report(err) }) // a rejected fact reaches the handler
 ```

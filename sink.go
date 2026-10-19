@@ -1,42 +1,8 @@
 package money
 
-import (
-	"webtyp.com/fmt"
-)
-
 // Sink receives facts. Accept must be idempotent by Key and must return Validate's error for an invalid fact.
 type Sink interface {
 	Accept(f Fact) error
-}
-
-// Fanout returns a Sink that offers every fact to all the sinks, in order. It does not stop at the first failure: it
-// returns an `Error` whose text lists every sink index that failed and why (text built with `webtyp/fmt`), or nil.
-func Fanout(sinks ...Sink) Sink {
-	return fanoutSink{sinks: sinks}
-}
-
-type fanoutSink struct {
-	sinks []Sink
-}
-
-func (s fanoutSink) Accept(f Fact) error {
-	var errStr string
-	hasError := false
-
-	for i, sink := range s.sinks {
-		if err := sink.Accept(f); err != nil {
-			if hasError {
-				errStr += "; "
-			}
-			errStr += fmt.Sprintf("sink %d failed: %s", i, err.Error())
-			hasError = true
-		}
-	}
-
-	if hasError {
-		return Error(errStr)
-	}
-	return nil
 }
 
 // Replayer is a module that can list again the facts it produced between two times (Unix seconds UTC, inclusive).

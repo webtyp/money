@@ -1,5 +1,7 @@
 package money
 
+import "webtyp.com/model"
+
 // Kind says what happened.
 type Kind string
 
@@ -122,3 +124,27 @@ func (f Fact) Validate() error {
 func (f Fact) Key() string {
 	return string(f.Kind) + "|" + f.Source.Type + "|" + f.Source.ID
 }
+
+// Topic is the events topic every fact is published on.
+const Topic = "money.fact"
+
+// IsNil reports whether the fact pointer is nil (model.Encodable).
+func (f *Fact) IsNil() bool { return f == nil }
+
+// EncodeFields writes every field of the fact (model.Encodable), so a fact can travel as an events payload.
+func (f *Fact) EncodeFields(w model.FieldWriter) {
+	w.String("kind", string(f.Kind))
+	w.Int("side", int64(f.Side))
+	w.Int("amount", f.Amount.Amount)
+	w.String("currency", string(f.Amount.Currency))
+	w.String("scope", f.Scope)
+	w.String("source_type", f.Source.Type)
+	w.String("source_id", f.Source.ID)
+	w.String("party", f.Party)
+	w.Int("at", f.At)
+	w.Int("due_at", f.DueAt)
+	w.String("of_type", f.Of.Type)
+	w.String("of_id", f.Of.ID)
+}
+
+var _ model.Encodable = (*Fact)(nil)

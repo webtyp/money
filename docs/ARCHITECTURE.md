@@ -19,3 +19,17 @@ This module is not an accounting engine itself; rather, it formalizes the "money
 ## Reconcile: The Safety Net
 
 The `Reconcile` function provides a safety net against lost events. Because `Accept` on a sink is fully idempotent, an application can periodically ask a `Replayer` to re-emit all facts in a given time window. Any fact that the `Sink` missed will be processed, while facts it already knows about will safely have no effect.
+
+## Facts travel as `events`
+
+A module that moves money already receives an `events.Publisher`; it announces a fact with `money.Publish(publisher, fact)`, which
+validates the fact first and publishes it on the topic `money.fact` (`money.Topic`) as a `model.Encodable` payload. A sink is
+attached with `money.Subscribe(subscriber, sink, onError)`. There is no second delivery mechanism and no fan-out helper in this
+package: several sinks each subscribe, and `events.Fanout` composes publishers.
+
+## Why `Sink` exists next to `events`
+
+An `events.Handler` returns nothing and promises no delivery. Money needs two things it cannot say: that the receiver **accepts or
+rejects** a fact (a rejection must reach someone: `onError`), and that a fact can be **offered again** safely (`Reconcile` feeds a
+sink directly and stops at the first error). `Sink.Accept` is that error-returning, idempotent contract; `events` carries the fact
+to it.

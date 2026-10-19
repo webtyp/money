@@ -33,49 +33,6 @@ func (r *mockReplayer) Facts(from, to int64) ([]money.Fact, error) {
 	return res, nil
 }
 
-func TestFanout(t *testing.T) {
-	validAmount, _ := money.New(100, "CLP")
-	fact := money.Fact{
-		Kind:   money.Charged,
-		Side:   money.Inflow,
-		Amount: validAmount,
-		Scope:  "test",
-		Source: money.Ref{Type: "payment", ID: "123"},
-		At:     1000,
-	}
-
-	t.Run("all succeed", func(t *testing.T) {
-		s1 := &mockSink{}
-		s2 := &mockSink{}
-		fanout := money.Fanout(s1, s2)
-		err := fanout.Accept(fact)
-		if err != nil {
-			t.Errorf("expected no error, got %v", err)
-		}
-		if s1.f == nil || s2.f == nil {
-			t.Error("expected both sinks to be called")
-		}
-	})
-
-	t.Run("some fail", func(t *testing.T) {
-		s1 := &mockSink{err: money.Error("error 1")}
-		s2 := &mockSink{}
-		s3 := &mockSink{err: money.Error("error 3")}
-		fanout := money.Fanout(s1, s2, s3)
-		err := fanout.Accept(fact)
-		if err == nil {
-			t.Fatal("expected error, got nil")
-		}
-		expectedErr := "sink 0 failed: error 1; sink 2 failed: error 3"
-		if err.Error() != expectedErr {
-			t.Errorf("expected error %q, got %q", expectedErr, err.Error())
-		}
-		if s1.f == nil || s2.f == nil || s3.f == nil {
-			t.Error("expected all sinks to be called even if some fail")
-		}
-	})
-}
-
 func TestReconcile(t *testing.T) {
 	validAmount, _ := money.New(100, "CLP")
 	f1 := money.Fact{

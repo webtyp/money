@@ -19,6 +19,8 @@ const (
 	ErrDueTime     Error = "money: only an accrual carries a due time"
 	ErrReverses    Error = "money: a reversal needs the source of the fact it reverses, and only a reversal has one"
 	ErrKeyConflict Error = "money: a fact with the same key but different content was already accepted"
+	ErrHandler     Error = "money: Subscribe needs a sink and an error handler"
+	ErrPayload     Error = "money: the payload of a money.fact event is not a fact"
 )
 
 // Currency is an ISO-4217 code: exactly three upper-case ASCII letters.

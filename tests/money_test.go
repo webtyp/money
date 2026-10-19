@@ -153,10 +153,10 @@ func TestMoneyCompare(t *testing.T) {
 			want: 1, wantErr: nil,
 		},
 		{
-			name:    "mismatch",
-			a:       money.Money{Amount: 100, Currency: "CLP"},
-			b:       money.Money{Amount: 100, Currency: "USD"},
-			want:    0, wantErr: money.ErrMismatch,
+			name: "mismatch",
+			a:    money.Money{Amount: 100, Currency: "CLP"},
+			b:    money.Money{Amount: 100, Currency: "USD"},
+			want: 0, wantErr: money.ErrMismatch,
 		},
 	}
 

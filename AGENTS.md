@@ -19,7 +19,7 @@
 
 ## This repo
 
-- **Pure types and rules, no I/O.** `Money`, `Fact` and the `Sink` port. No `orm`, `storage`, `router`, `model`, no HTTP.
+- **Pure types and rules, no I/O.** `Money`, `Fact` and the `Sink` port. It builds on the two contracts it needs, `webtyp.com/events` (a fact travels as an event payload) and `webtyp.com/model` (`Encodable`); nothing else: no `orm`, `storage`, `router`, no HTTP.
   Persistence of facts belongs to the modules that implement `Sink` (a cash module today, an accounting module later).
 - Compiles to both WASM and native: `webtyp/fmt` for errors, no `map`, no `reflect`, no stdlib `errors`/`strings`/`strconv`/`fmt`.
 - **Amounts are integers in minor units** (for Chilean pesos one unit is one peso). Never `float32`/`float64` for money.
