@@ -1,6 +1,9 @@
 package money
 
-import "webtyp.com/model"
+import (
+	"webtyp.com/model"
+	"webtyp.com/time"
+)
 
 // Kind says what happened.
 type Kind string
@@ -34,13 +37,13 @@ type Ref struct {
 type Fact struct {
 	Kind   Kind
 	Side   Side
-	Amount Money  // always greater than zero
-	Scope  string // the area of the business the money belongs to ("consultation", "pharmacy"…): configuration of the app
-	Source Ref    // what caused the fact, in its owning module; with Kind it is the fact's identity
-	Party  string // the counterparty's id in its module; may be empty (a counter sale to nobody in particular)
-	At     int64  // Unix seconds UTC: when it happened
-	DueAt  int64  // Unix seconds UTC: when an accrual falls due; 0 = no date. Only for Accrued
-	Of     Ref    // for Reversed: the Source of the fact being undone; otherwise empty
+	Amount Money     // always greater than zero
+	Scope  string    // the area of the business the money belongs to ("consultation", "pharmacy"…): configuration of the app
+	Source Ref       // what caused the fact, in its owning module; with Kind it is the fact's identity
+	Party  string    // the counterparty's id in its module; may be empty (a counter sale to nobody in particular)
+	At     time.Unix // when it happened
+	DueAt  time.Unix // when an accrual falls due; 0 = no date. Only for Accrued
+	Of     Ref       // for Reversed: the Source of the fact being undone; otherwise empty
 }
 
 // Validate checks the rules below and returns the first violated one.
@@ -141,8 +144,8 @@ func (f *Fact) EncodeFields(w model.FieldWriter) {
 	w.String("source_type", f.Source.Type)
 	w.String("source_id", f.Source.ID)
 	w.String("party", f.Party)
-	w.Int("at", f.At)
-	w.Int("due_at", f.DueAt)
+	w.Int("at", int64(f.At))
+	w.Int("due_at", int64(f.DueAt))
 	w.String("of_type", f.Of.Type)
 	w.String("of_id", f.Of.ID)
 }

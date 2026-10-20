@@ -3,6 +3,7 @@ package money_test
 import (
 	"testing"
 	"webtyp.com/money"
+	"webtyp.com/time"
 )
 
 type mockSink struct {
@@ -20,7 +21,7 @@ type mockReplayer struct {
 	err   error
 }
 
-func (r *mockReplayer) Facts(from, to int64) ([]money.Fact, error) {
+func (r *mockReplayer) Facts(from, to time.Unix) ([]money.Fact, error) {
 	if r.err != nil {
 		return nil, r.err
 	}
