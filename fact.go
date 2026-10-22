@@ -26,6 +26,18 @@ const (
 	Outflow Side = -1
 )
 
+// Means is how money moved. Debit and credit cards are both MeansCard: what matters to the cash and to the deposit
+// date is that the money goes through a card processor.
+type Means string
+
+const (
+	MeansCash     Means = "CASH"
+	MeansCard     Means = "CARD"
+	MeansTransfer Means = "TRANSFER"
+)
+
+func (m Means) valid() bool { return m == MeansCash || m == MeansCard || m == MeansTransfer }
+
 // Ref identifies a thing in the module that owns it: Type is the module's own name for it ("payment", "service_execution"),
 // ID its id there.
 type Ref struct {
@@ -41,6 +53,8 @@ type Fact struct {
 	Scope  string    // the area of the business the money belongs to ("consultation", "pharmacy"…): configuration of the app
 	Source Ref       // what caused the fact, in its owning module; with Kind it is the fact's identity
 	Party  string    // the counterparty's id in its module; may be empty (a counter sale to nobody in particular)
+	Means  Means     // how it was paid; required for Charged and Refunded, optional (empty or valid) otherwise
+	Actor  string    // id of the user who registered it; empty = the system did
 	At     time.Unix // when it happened
 	DueAt  time.Unix // when an accrual falls due; 0 = no date. Only for Accrued
 	Of     Ref       // for Reversed: the Source of the fact being undone; otherwise empty
@@ -48,6 +62,7 @@ type Fact struct {
 
 // Validate checks the rules below and returns the first violated one.
 //   - Kind must be one of the constants (ErrKind).
+//   - Means is required and valid for Charged and Refunded; elsewhere empty or valid (ErrMeans).
 //   - Side must be Inflow or Outflow, and fixed by the kind where it is fixed: Charged Inflow; Refunded, Purchased and
 //     Consumed Outflow; Accrued, Settled and Reversed either (ErrSide).
 //   - Amount.Amount > 0 and Amount.Currency valid (ErrAmount, ErrCurrency).
@@ -77,6 +92,17 @@ func (f Fact) Validate() error {
 		}
 	case Accrued, Settled, Reversed:
 		// can be either
+	}
+
+	switch f.Kind {
+	case Charged, Refunded:
+		if !f.Means.valid() {
+			return ErrMeans
+		}
+	default:
+		if f.Means != "" && !f.Means.valid() {
+			return ErrMeans
+		}
 	}
 
 	if f.Amount.Amount <= 0 {
@@ -144,6 +170,8 @@ func (f *Fact) EncodeFields(w model.FieldWriter) {
 	w.String("source_type", f.Source.Type)
 	w.String("source_id", f.Source.ID)
 	w.String("party", f.Party)
+	w.String("means", string(f.Means))
+	w.String("actor", f.Actor)
 	w.Int("at", int64(f.At))
 	w.Int("due_at", int64(f.DueAt))
 	w.String("of_type", f.Of.Type)

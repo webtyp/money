@@ -24,6 +24,7 @@ func RunSink(t *testing.T, newStore func(t *testing.T) Store) {
 			Amount: validAmount,
 			Scope:  "test",
 			Source: money.Ref{Type: "payment", ID: "123"},
+			Means:  money.MeansCash,
 			At:     1000,
 		}
 
@@ -59,37 +60,37 @@ func RunSink(t *testing.T, newStore func(t *testing.T) Store) {
 			},
 			{
 				"invalid side",
-				money.Fact{Kind: money.Charged, Side: money.Outflow, Amount: validAmount, Scope: "test", Source: validSource, At: 1000},
+				money.Fact{Kind: money.Charged, Side: money.Outflow, Amount: validAmount, Scope: "test", Source: validSource, Means: money.MeansCash, At: 1000},
 				money.ErrSide,
 			},
 			{
 				"invalid amount",
-				money.Fact{Kind: money.Charged, Side: money.Inflow, Amount: money.Money{Amount: 0, Currency: "CLP"}, Scope: "test", Source: validSource, At: 1000},
+				money.Fact{Kind: money.Charged, Side: money.Inflow, Amount: money.Money{Amount: 0, Currency: "CLP"}, Scope: "test", Source: validSource, Means: money.MeansCash, At: 1000},
 				money.ErrAmount,
 			},
 			{
 				"invalid currency",
-				money.Fact{Kind: money.Charged, Side: money.Inflow, Amount: money.Money{Amount: 100, Currency: ""}, Scope: "test", Source: validSource, At: 1000},
+				money.Fact{Kind: money.Charged, Side: money.Inflow, Amount: money.Money{Amount: 100, Currency: ""}, Scope: "test", Source: validSource, Means: money.MeansCash, At: 1000},
 				money.ErrCurrency,
 			},
 			{
 				"missing source",
-				money.Fact{Kind: money.Charged, Side: money.Inflow, Amount: validAmount, Scope: "test", Source: money.Ref{}, At: 1000},
+				money.Fact{Kind: money.Charged, Side: money.Inflow, Amount: validAmount, Scope: "test", Source: money.Ref{}, Means: money.MeansCash, At: 1000},
 				money.ErrSource,
 			},
 			{
 				"missing scope",
-				money.Fact{Kind: money.Charged, Side: money.Inflow, Amount: validAmount, Scope: "", Source: validSource, At: 1000},
+				money.Fact{Kind: money.Charged, Side: money.Inflow, Amount: validAmount, Scope: "", Source: validSource, Means: money.MeansCash, At: 1000},
 				money.ErrScope,
 			},
 			{
 				"missing time",
-				money.Fact{Kind: money.Charged, Side: money.Inflow, Amount: validAmount, Scope: "test", Source: validSource, At: 0},
+				money.Fact{Kind: money.Charged, Side: money.Inflow, Amount: validAmount, Scope: "test", Source: validSource, Means: money.MeansCash, At: 0},
 				money.ErrTime,
 			},
 			{
 				"due time on non-accrued",
-				money.Fact{Kind: money.Charged, Side: money.Inflow, Amount: validAmount, Scope: "test", Source: validSource, At: 1000, DueAt: 2000},
+				money.Fact{Kind: money.Charged, Side: money.Inflow, Amount: validAmount, Scope: "test", Source: validSource, Means: money.MeansCash, At: 1000, DueAt: 2000},
 				money.ErrDueTime,
 			},
 			{
@@ -126,6 +127,7 @@ func RunSink(t *testing.T, newStore func(t *testing.T) Store) {
 			Amount: validAmount,
 			Scope:  "test",
 			Source: money.Ref{Type: "payment", ID: "123"},
+			Means:  money.MeansCash,
 			At:     1000,
 		}
 
@@ -156,6 +158,7 @@ func RunSink(t *testing.T, newStore func(t *testing.T) Store) {
 			Amount: validAmount1,
 			Scope:  "test",
 			Source: money.Ref{Type: "payment", ID: "123"},
+			Means:  money.MeansCash,
 			At:     1000,
 		}
 		f2 := money.Fact{
@@ -164,6 +167,7 @@ func RunSink(t *testing.T, newStore func(t *testing.T) Store) {
 			Amount: validAmount2,
 			Scope:  "test",
 			Source: money.Ref{Type: "payment", ID: "123"},
+			Means:  money.MeansCash,
 			At:     1000,
 		}
 
@@ -198,6 +202,7 @@ func RunSink(t *testing.T, newStore func(t *testing.T) Store) {
 			Amount: validAmount,
 			Scope:  "test",
 			Source: source,
+			Means:  money.MeansCash,
 			At:     1000,
 		}
 		f2 := money.Fact{
@@ -206,6 +211,7 @@ func RunSink(t *testing.T, newStore func(t *testing.T) Store) {
 			Amount: validAmount,
 			Scope:  "test",
 			Source: source,
+			Means:  money.MeansCash,
 			At:     1000,
 		}
 
@@ -236,6 +242,7 @@ func RunSink(t *testing.T, newStore func(t *testing.T) Store) {
 			Amount: validAmount,
 			Scope:  "test",
 			Source: source1,
+			Means:  money.MeansCash,
 			At:     1000,
 		}
 		source2 := money.Ref{Type: "payment_reversal", ID: "124"}
