@@ -3,8 +3,10 @@ PLAN: "feat!: a fact says how it was paid (Means) and who registered it (Actor)"
 TAG: v0.2.0
 EXECUTOR: jules
 REVIEWER: none
-STATUS: running
+STATUS: review
 SESSION: 9749958610748800387
+PR: https://github.com/webtyp/money/pull/2
+REVIEWED_COMMIT: 265f0fe82d30f84109ce40e7790d8d05ba6e2d38
 ---
 
 > Read AGENTS.md at the repo root before any change.
