@@ -12,6 +12,7 @@ const (
 	ErrBasisPoints Error = "money: basis points must be between 0 and 10000"
 	ErrKind        Error = "money: unknown fact kind"
 	ErrSide        Error = "money: invalid side for this kind of fact"
+	ErrMeans       Error = "money: a charge or refund needs a valid means of payment"
 	ErrAmount      Error = "money: the amount of a fact must be greater than zero"
 	ErrSource      Error = "money: a fact needs the type and id of its source"
 	ErrScope       Error = "money: a fact needs a scope"

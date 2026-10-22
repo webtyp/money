@@ -58,6 +58,8 @@ func validFact(t *testing.T) money.Fact {
 		Scope:  "pharmacy",
 		Source: money.Ref{Type: "payment", ID: "p1"},
 		Party:  "c1",
+		Means:  money.MeansCard,
+		Actor:  "u1",
 		At:     1700000000,
 	}
 }
@@ -160,7 +162,7 @@ func TestFactEncodesEveryField(t *testing.T) {
 	f := validFact(t)
 	w := &recordingWriter{}
 	f.EncodeFields(w)
-	wantStrings := []string{"kind=CHARGED", "currency=CLP", "scope=pharmacy", "source_type=payment", "source_id=p1", "party=c1", "of_type=", "of_id="}
+	wantStrings := []string{"kind=CHARGED", "currency=CLP", "scope=pharmacy", "source_type=payment", "source_id=p1", "party=c1", "means=CARD", "actor=u1", "of_type=", "of_id="}
 	wantInts := []string{"side=1", "amount=1500", "at=1700000000", "due_at=0"}
 	if len(w.strings) != len(wantStrings) || len(w.ints) != len(wantInts) {
 		t.Fatalf("wrote %v / %v", w.strings, w.ints)

@@ -19,6 +19,10 @@ It is **not** accounting: no accounts, no debit/credit, no balances, no persiste
 | `PURCHASED` | goods were bought | `Outflow` |
 | `CONSUMED` | goods were used up, at cost | `Outflow` |
 
+`Fact` also carries:
+- `Means`: how the money moved (`MeansCash`, `MeansCard`, `MeansTransfer`). Required for `Charged` and `Refunded`, optional otherwise.
+- `Actor`: the id of the user who registered it (empty if the system did).
+
 ## Example
 
 ```go
@@ -40,6 +44,8 @@ func CollectPayment(amount int64, currency money.Currency, sink money.Sink) erro
 		Amount: m,
 		Scope:  "sales",
 		Source: money.Ref{Type: "payment", ID: "pay_123"},
+		Means:  money.MeansCard,
+		Actor:  "u1",
 		At:     time.Now().Unix(),
 	}
 	return sink.Accept(f)
@@ -65,3 +71,5 @@ if err := money.Publish(pub, fact); err != nil { /* the fact was invalid: nothin
 // The application attaches a sink (a cash view today, an accounting module later).
 err := money.Subscribe(broker, mySink, func(err error) { report(err) }) // a rejected fact reaches the handler
 ```
+
+Example: card payment: `Accrued` inflow, `Means: MeansCard`, `DueAt` = the day the processor deposits.
