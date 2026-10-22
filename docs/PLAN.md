@@ -6,7 +6,7 @@ REVIEWER: none
 STATUS: review
 SESSION: 9749958610748800387
 PR: https://github.com/webtyp/money/pull/2
-REVIEWED_COMMIT: 265f0fe82d30f84109ce40e7790d8d05ba6e2d38
+REVIEWED_COMMIT: 5b61696b4ec831e326d8e1249d5a464dec1bd2ba
 ---
 
 > Read AGENTS.md at the repo root before any change.
