@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"webtyp.com/events"
-	"webtyp.com/events/mock"
+	"webtyp.com/events/inprocess"
 	"webtyp.com/model"
 	"webtyp.com/money"
 )
@@ -65,7 +65,7 @@ func validFact(t *testing.T) money.Fact {
 }
 
 func TestPublishReachesSubscribedSink(t *testing.T) {
-	broker := &mock.Broker{}
+	broker := &inprocess.Broker{}
 	sink := &mockSink{}
 	var got error
 	if err := money.Subscribe(broker, sink, func(err error) { got = err }); err != nil {
@@ -84,7 +84,7 @@ func TestPublishReachesSubscribedSink(t *testing.T) {
 }
 
 func TestPublishDoesNotPublishAnInvalidFact(t *testing.T) {
-	broker := &mock.Broker{}
+	broker := &inprocess.Broker{}
 	sink := &mockSink{}
 	if err := money.Subscribe(broker, sink, func(error) {}); err != nil {
 		t.Fatal(err)
@@ -100,7 +100,7 @@ func TestPublishDoesNotPublishAnInvalidFact(t *testing.T) {
 }
 
 func TestTwoSinksBothReceive(t *testing.T) {
-	broker := &mock.Broker{}
+	broker := &inprocess.Broker{}
 	a, b := &mockSink{}, &mockSink{}
 	if err := money.Subscribe(broker, a, func(error) {}); err != nil {
 		t.Fatal(err)
@@ -117,7 +117,7 @@ func TestTwoSinksBothReceive(t *testing.T) {
 }
 
 func TestSinkErrorReachesOnError(t *testing.T) {
-	broker := &mock.Broker{}
+	broker := &inprocess.Broker{}
 	sink := &mockSink{err: money.ErrKeyConflict}
 	var got error
 	if err := money.Subscribe(broker, sink, func(err error) { got = err }); err != nil {
@@ -132,7 +132,7 @@ func TestSinkErrorReachesOnError(t *testing.T) {
 }
 
 func TestSubscribeNeedsASinkAndAnErrorHandler(t *testing.T) {
-	broker := &mock.Broker{}
+	broker := &inprocess.Broker{}
 	if err := money.Subscribe(broker, nil, func(error) {}); err != money.ErrHandler {
 		t.Fatalf("nil sink: %v, want ErrHandler", err)
 	}
@@ -147,7 +147,7 @@ func (*foreignPayload) IsNil() bool                      { return false }
 func (*foreignPayload) EncodeFields(w model.FieldWriter) {}
 
 func TestForeignPayloadReachesOnError(t *testing.T) {
-	broker := &mock.Broker{}
+	broker := &inprocess.Broker{}
 	var got error
 	if err := money.Subscribe(broker, &mockSink{}, func(err error) { got = err }); err != nil {
 		t.Fatal(err)

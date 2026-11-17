@@ -12,3 +12,5 @@ require (
 	webtyp.com/calendar v0.1.0 // indirect
 	webtyp.com/fmt v1.0.2 // indirect
 )
+
+replace webtyp.com/events => ../events
